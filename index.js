@@ -1,1 +1,123 @@
-a
+const express = require("express");
+const app = express();
+
+const persons = [
+  {
+    id: "1",
+    name: "Arto Hellas",
+    number: "040-123456",
+  },
+  {
+    id: "2",
+    name: "Ada Lovelace",
+    number: "39-44-5323523",
+  },
+  {
+    id: "3",
+    name: "Dan Abramov",
+    number: "12-43-234345",
+  },
+  {
+    id: "4",
+    name: "Mary Poppendieck",
+    number: "39-23-6423122",
+  },
+];
+
+app.get("/", (request, response) => {
+  response.send(`
+    <html>
+        <head>
+            <title>Persons API</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    background-color: #f4f4f4;
+                    margin: 0;
+                    padding: 0;
+                }
+                h1 {
+                    text-align: center;
+                    padding: 20px;
+                    background-color: #4CAF50;
+                    color: white;
+                    margin: 0;
+                }
+                table {
+                    width: 80%;
+                    margin: 50px auto;
+                    border-collapse: collapse;
+                    background-color: white;
+                }
+                th, td {
+                    padding: 15px;
+                    text-align: left;
+                    border-bottom: 1px solid #ddd;
+                }
+                th {
+                    background-color: #f2f2f2;
+                }
+                tr:hover {
+                    background-color: #f1f1f1;
+                }
+            </style>
+        </head>
+        <body>
+            <h1>Persons API</h1>
+            <table>
+                <tr>
+                    <th>Endpoint</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td><a href="/api/persons">/api/persons</a></td>
+                    <td>All persons.</td>
+                </tr>
+                <tr>
+                    <td><a href="/api/persons/1">/api/persons/{id}</a></td>
+                    <td>Search by a person's id.</td>
+                </tr>
+                <tr>
+                    <td><a href="/info">/info</a></td>
+                    <td>Phonebook information, including the number of persons.</td>
+                </tr>
+            </table>
+        </body>
+    </html>
+        `);
+});
+
+app.get("/api/persons", (req, res) => {
+  res.json(persons);
+});
+
+app.get("/api/persons/:id", (req, res) => {
+  const id = req.params.id;
+  const person = persons.find((p) => p.id === id);
+  if(person){
+    res.json(person);
+  }else{
+    res.sendStatus(404).end()
+  }
+
+});
+
+app.get("/info", (req, res) => {
+  res.send(`
+        <html>
+            <head>
+                <title>Phonebook API Info</title>
+            </head>
+            <body>
+                <h1>Phonebook Information</h1>
+                <p>Phonebook has info for ${persons.length} person${persons.length === 1 ? '' : 's'}</p>
+                <p>${new Date()}</p>
+            </body>
+        </html>
+        `);
+});
+
+const PORT = 3001;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:3001/`);
+});
