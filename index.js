@@ -1,7 +1,22 @@
 const express = require("express");
+const morgan = require("morgan");
+const cors = require("cors");
 const app = express();
 
-const persons = [
+app.use(express.json());
+
+morgan.token("body", (req) => {
+  return req.body && Object.keys(req.body).length
+    ? JSON.stringify(req.body)
+    : "";
+});
+
+app.use(
+  morgan(":method :url :status :res[content-length] - :total-time ms :body")
+);
+app.use(cors());
+
+let persons = [
   {
     id: "1",
     name: "Arto Hellas",
@@ -94,12 +109,11 @@ app.get("/api/persons", (req, res) => {
 app.get("/api/persons/:id", (req, res) => {
   const id = req.params.id;
   const person = persons.find((p) => p.id === id);
-  if(person){
+  if (person) {
     res.json(person);
-  }else{
-    res.sendStatus(404).end()
+  } else {
+    res.status(404).end();
   }
-
 });
 
 app.get("/info", (req, res) => {
@@ -110,11 +124,46 @@ app.get("/info", (req, res) => {
             </head>
             <body>
                 <h1>Phonebook Information</h1>
-                <p>Phonebook has info for ${persons.length} person${persons.length === 1 ? '' : 's'}</p>
+                <p>Phonebook has info for ${persons.length} person${
+    persons.length === 1 ? "" : "s"
+  }</p>
                 <p>${new Date()}</p>
             </body>
         </html>
         `);
+});
+
+app.delete("/api/persons/:id", (req, res) => {
+  const id = req.params.id;
+  persons = persons.filter((person) => person.id !== id);
+
+  res.status(204).end();
+});
+
+app.post("/api/persons", (req, res) => {
+  const body = req.body;
+  console.log("hii", req.body);
+  if (!body) {
+    return res.status(400).json({error:"Body is empty."})
+  } else if (!body.name) {
+    return res.status(400).json({ error: "Name is missing." });
+  } else if (!body.number) {
+    return res.status(400).json({ error: "Number is missing." });
+  } else if (
+    persons.some((p) => p.name.toLowerCase() === body.name.toLowerCase())
+  ) {
+    return res.status(400).json({ error: `name must be unique` });
+  }
+
+  const newPerson = {
+    id: (Math.random() * 10000).toFixed(0),
+    name: body.name,
+    number: body.number,
+  };
+
+  persons.push(newPerson);
+
+  res.json(newPerson);
 });
 
 const PORT = 3001;

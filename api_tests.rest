@@ -1,1 +1,24 @@
+# GET /api/persons - Get all persons
 GET http://localhost:3001/api/persons/
+
+###
+# GET /api/persons/{id} - Get a person using the id
+GET http://localhost:3001/api/persons/1
+
+###
+# GET /info - Get phonebook info
+GET http://localhost:3001/info
+
+###
+# DELETE /api/persons/{id} - Delete a person using the id
+DELETE http://localhost:3001/api/persons/1
+
+###
+# POST /api/persons - Create a new person
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "Liisa Marttinen",
+    "number": "040-243563"
+}
