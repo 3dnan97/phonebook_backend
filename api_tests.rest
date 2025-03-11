@@ -3,7 +3,7 @@ GET http://localhost:3001/api/persons/
 
 ###
 # GET /api/persons/{id} - Get a person using the id
-GET http://localhost:3001/api/persons/1
+GET http://localhost:3001/api/persons/someInvalidId 
 
 ###
 # GET /info - Get phonebook info
@@ -11,7 +11,7 @@ GET http://localhost:3001/info
 
 ###
 # DELETE /api/persons/{id} - Delete a person using the id
-DELETE http://localhost:3001/api/persons/1
+DELETE http://localhost:3001/api/persons/67ce76e509171f11f49aca1b
 
 ###
 # POST /api/persons - Create a new person
@@ -19,6 +19,16 @@ POST http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
-    "name": "Liisa Marttinen",
+    "name": "adnan Al",
+    "number": "040-1231321"
+}
+
+###
+# PUT /api/persons/{id} - Update a person using the id
+PUT http://localhost:3001/api/persons/67ce30eefcddd88c5920f097 
+Content-Type: application/json
+
+{
+    "name": "Adnan",
     "number": "040-243563"
 }
